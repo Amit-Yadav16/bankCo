@@ -1,69 +1,103 @@
+"""components/navbar.py — Top navigation and sidebar for BankCo.
+Reflects strictly verified model information, neutral guest state by default, and responsive styling.
+"""
 import streamlit as st
+from components.icons import get_icon
+from components.logo import render_logo_img
 
-from utils.navigation import PAGES, go_to
-
-LOGO_SVG = """<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12 2L2 7.5V9H22V7.5L12 2Z" fill="white"/>
-<rect x="4" y="10" width="2.4" height="9" fill="white"/>
-<rect x="10.8" y="10" width="2.4" height="9" fill="white"/>
-<rect x="17.6" y="10" width="2.4" height="9" fill="white"/>
-<rect x="2" y="20" width="20" height="2" fill="white"/>
-</svg>"""
-
-NAV_ICONS = {"Dashboard": "🏠", "AI Explain": "🧠", "Risk Customer": "⚠️", "History": "📊"}
+NAV_ITEMS = [
+    ("Landing",       "Home"),
+    ("Dashboard",     "Dashboard"),
+    ("AI Explain",    "AI Explain"),
+    ("Risk Customer", "Risk Customers"),
+    ("History",       "History"),
+    ("Upload",        "Upload Customer"),
+]
 
 
 def render_navbar():
-    st.markdown('<div class="bc-navbar">', unsafe_allow_html=True)
+    active = st.session_state.page
+    authed = st.session_state.get("authed", False)
+    user = st.session_state.get("user")
 
-    top_l, top_r = st.columns([3, 2])
-    with top_l:
-        st.markdown(
-            f"""<div class="bc-brand">
-                <div class="bc-brand-mark">{LOGO_SVG}</div>
-                <div>
-                    <div class="bc-brand-name">BankCo</div>
-                    <div class="bc-brand-tag">Retention Intelligence</div>
-                </div>
-            </div>""",
-            unsafe_allow_html=True,
-        )
-    with top_r:
-        a1, a2, a3 = st.columns([1, 1, 0.7])
-        with a1:
-            if st.button("Sign In", key="nav_signin", use_container_width=True):
+    # Ambient backdrop glow
+    st.markdown('<div class="bc-ambient-glow"></div>', unsafe_allow_html=True)
+
+    # Top Navigation Row — Unified single-row alignment across brand, nav items, and auth
+    c_brand, c_home, c_dash, c_ai, c_risk, c_hist, c_up, c_auth = st.columns(
+        [2.3, 0.85, 1.15, 1.1, 1.35, 0.95, 1.35, 1.15], gap="small"
+    )
+
+    with c_brand:
+        st.markdown(f"""
+        <div style="display:flex; align-items:center; gap:9px; height:38px;">
+            {render_logo_img(height=34, icon_only=True)}
+            <div style="display:flex; align-items:baseline; gap:5px; white-space:nowrap; overflow:hidden;">
+                <span style="font-family:var(--bc-font-head); font-weight:800; font-size:1.15rem; color:#FFFFFF; letter-spacing:-0.02em;">Bank<span style="color:#06B6D4;">Co</span></span>
+                <span style="font-size:0.65rem; color:var(--bc-ink-faint); border-left:1px solid rgba(255,255,255,0.14); padding-left:5px;">Smarter Banking</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c_home:
+        if st.button("Home", key="nav_Landing", type="primary" if active == "Landing" else "secondary", use_container_width=True):
+            st.session_state.page = "Landing"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_dash:
+        if st.button("Dashboard", key="nav_Dashboard", type="primary" if active == "Dashboard" else "secondary", use_container_width=True):
+            st.session_state.page = "Dashboard"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_ai:
+        if st.button("AI Explain", key="nav_AI_Explain", type="primary" if active == "AI Explain" else "secondary", use_container_width=True):
+            st.session_state.page = "AI Explain"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_risk:
+        if st.button("Risk Customers", key="nav_Risk_Customer", type="primary" if active == "Risk Customer" else "secondary", use_container_width=True):
+            st.session_state.page = "Risk Customer"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_hist:
+        if st.button("History", key="nav_History", type="primary" if active == "History" else "secondary", use_container_width=True):
+            st.session_state.page = "History"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_up:
+        if st.button("Upload Customer", key="nav_Upload", type="primary" if active == "Upload" else "secondary", use_container_width=True):
+            st.session_state.page = "Upload"
+            st.session_state.landing_section = None
+            st.session_state.show_auth = None
+            st.rerun()
+
+    with c_auth:
+        if authed and user:
+            name = user.get("name", "User")
+            first_name = name.split()[0] if name else "User"
+            if st.button(f"Sign Out ({first_name})", key="nav_signout_btn", type="secondary", use_container_width=True):
+                st.session_state.authed = False
+                st.session_state.user = None
+                st.rerun()
+        else:
+            if st.button("Sign In", key="nav_signin_btn", type="secondary", use_container_width=True):
                 st.session_state.show_auth = "signin"
-        with a2:
-            if st.button("Sign Up", key="nav_signup", use_container_width=True, type="primary"):
-                st.session_state.show_auth = "signup"
-        with a3:
-            if st.button("👤", key="nav_profile", use_container_width=True):
-                st.session_state.show_profile = not st.session_state.show_profile
+                st.rerun()
 
-    nav_cols = st.columns(len(PAGES) + 5)
-    for i, page in enumerate(PAGES):
-        with nav_cols[i]:
-            active_class = "bc-navzone-active" if st.session_state.page == page else "bc-navzone"
-            st.markdown(f'<div class="{active_class}">', unsafe_allow_html=True)
-            if st.button(f"{NAV_ICONS[page]}  {page}", key=f"nav_{page}", use_container_width=True):
-                go_to(page)
-            st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    if st.session_state.show_profile:
-        render_profile_panel()
+    st.markdown("<div style='height: 1px; background: rgba(255,255,255,0.08); margin: 0.5rem 0 1.2rem 0;'></div>", unsafe_allow_html=True)
 
 
-def render_profile_panel():
-    user = st.session_state.user
-    with st.container():
-        st.markdown('<div class="bc-card bc-fade-in" style="max-width:320px;">', unsafe_allow_html=True)
-        st.markdown(f"**{user['name']}**")
-        st.markdown(f"<span class='bc-caption'>{user['email']}</span>", unsafe_allow_html=True)
-        st.markdown(f"<span class='bc-caption'>Role: {user['role']}</span>", unsafe_allow_html=True)
-        st.markdown("<span class='bc-caption'>Last login: Today, 9:14 AM</span>", unsafe_allow_html=True)
-        st.markdown("<hr class='bc-hr' style='margin:0.7rem 0;'>", unsafe_allow_html=True)
-        if st.button("Log out", key="profile_logout"):
-            st.session_state.show_profile = False
-        st.markdown("</div>", unsafe_allow_html=True)
+def render_sidebar():
+    """Sidebar removed per user instruction in favor of direct full-width navigation."""
+    pass
+

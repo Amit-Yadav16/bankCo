@@ -1,0 +1,132 @@
+{
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 150,
+  "max_depth": 14,
+  "criterion": "entropy",
+  "class_weight": "balanced",
+  "random_state": 42,
+  "target_column": "Attrition_Flag",
+  "positive_class": "Attrited Customer",
+  "negative_class": "Existing Customer",
+  "training_date_utc": "2026-10-22T14:54:41.856464+00:00",
+  "dataset_name": "BankChurners.csv",
+  "total_records": 10127,
+  "train_samples": 8101,
+  "test_samples": 2026,
+  "input_features": {
+    "numerical": [
+      "Customer_Age",
+      "Dependent_count",
+      "Months_on_book",
+      "Total_Relationship_Count",
+      "Months_Inactive_12_mon",
+      "Contacts_Count_12_mon",
+      "Credit_Limit",
+      "Total_Revolving_Bal",
+      "Avg_Open_To_Buy",
+      "Total_Amt_Chng_Q4_Q1",
+      "Total_Trans_Amt",
+      "Total_Trans_Ct",
+      "Total_Ct_Chng_Q4_Q1",
+      "Avg_Utilization_Ratio"
+    ],
+    "categorical": [
+      "Gender",
+      "Education_Level",
+      "Marital_Status",
+      "Income_Category",
+      "Card_Category"
+    ],
+    "total_input_count": 19
+  },
+  "transformed_feature_count": 37,
+  "risk_thresholds": {
+    "high": 0.6,
+    "medium": 0.3,
+    "low": 0.0
+  },
+  "cross_validation_train_scores": {
+    "Logistic Regression (Baseline)": {
+      "roc_auc": 0.9254389336314333,
+      "pr_auc": 0.7484770337609298,
+      "f1": 0.6434400960489765,
+      "recall": 0.8471794871794872,
+      "precision": 0.5189182691824971
+    },
+    "HistGradientBoosting": {
+      "roc_auc": 0.993691827691924,
+      "pr_auc": 0.9709162000635088,
+      "f1": 0.9147389943260048,
+      "recall": 0.9254966106690243,
+      "precision": 0.9044904839296084
+    },
+    "Random Forest (Tuned)": {
+      "roc_auc": 0.9876884789345128,
+      "pr_auc": 0.9417548432935702,
+      "f1": 0.8727097369257601,
+      "recall": 0.8863572060123783,
+      "precision": 0.8600581133868591
+    }
+  },
+  "test_set_metrics": {
+    "test_samples": 2026,
+    "actual_churn_count": 325,
+    "actual_retained_count": 1701,
+    "threshold": 0.5,
+    "accuracy": 0.9531095755182626,
+    "precision": 0.844311377245509,
+    "recall": 0.8676923076923077,
+    "f1_score": 0.8558421851289834,
+    "roc_auc": 0.9859015059015059,
+    "pr_auc": 0.9443503054895355,
+    "confusion_matrix": [
+      [
+        1649,
+        52
+      ],
+      [
+        43,
+        282
+      ]
+    ],
+    "classification_report": {
+      "Existing Customer": {
+        "precision": 0.9745862884160756,
+        "recall": 0.969429747207525,
+        "f1-score": 0.9720011788977306,
+        "support": 1701.0
+      },
+      "Attrited Customer": {
+        "precision": 0.844311377245509,
+        "recall": 0.8676923076923077,
+        "f1-score": 0.8558421851289834,
+        "support": 325.0
+      },
+      "accuracy": 0.9531095755182626,
+      "macro avg": {
+        "precision": 0.9094488328307924,
+        "recall": 0.9185610274499163,
+        "f1-score": 0.913921682013357,
+        "support": 2026.0
+      },
+      "weighted avg": {
+        "precision": 0.9536882893388624,
+        "recall": 0.9531095755182626,
+        "f1-score": 0.9533675792062979,
+        "support": 2026.0
+      }
+    }
+  },
+  "top_10_features": {
+    "Total_Trans_Amt": 0.2111218340151139,
+    "Total_Trans_Ct": 0.17954554465627667,
+    "Total_Revolving_Bal": 0.10311699234739599,
+    "Total_Ct_Chng_Q4_Q1": 0.09632651227205295,
+    "Total_Amt_Chng_Q4_Q1": 0.06439159068971173,
+    "Avg_Utilization_Ratio": 0.05354356367735073,
+    "Total_Relationship_Count": 0.05245556355562341,
+    "Credit_Limit": 0.03479417895164078,
+    "Avg_Open_To_Buy": 0.03334257205141213,
+    "Months_Inactive_12_mon": 0.03030248188539223
+  }
+}

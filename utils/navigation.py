@@ -1,26 +1,20 @@
-"""Lightweight session-state router so BankCo can use one custom navbar
-instead of Streamlit's default multipage sidebar."""
-
+"""utils/navigation.py — Session state router and navigation management for BankCo."""
 import streamlit as st
 
-PAGES = ["Dashboard", "AI Explain", "Risk Customer", "History"]
+PAGES = ["Landing", "Dashboard", "AI Explain", "Risk Customer", "History", "Upload"]
 
 DEFAULTS = {
-    "page": "Dashboard",
+    "page": "Landing",
     "authed": False,
     "show_auth": None,          # None | "signin" | "signup"
     "show_profile": False,
-    "customers": None,           # DataFrame once uploaded/generated
+    "customers": None,          # DataFrame once uploaded/generated
     "predicted": False,
-    "pipeline_status": "idle",   # idle | running | done
+    "pipeline_status": "idle",  # idle | running | done
     "selected_customer": None,
     "uploaded_filename": None,
-    "history": [],                # list of past-session summary dicts
-    "user": {
-        "name": "Amit Yadav",
-        "email": "amit_yadav@bankco.com",
-        "role": "Retention Analyst",
-    },
+    "history": [],               # list of past-session summary dicts
+    "user": None,               # None by default — never assume a logged-in user
 }
 
 
